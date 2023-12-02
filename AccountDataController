@@ -1,0 +1,43 @@
+//public with sharing class AccountDataController {
+    
+ //   @AuraEnabled(cacheable=true)
+  //  public static List<Account> getAccountList() {
+      //  return [SELECT Id, Name, Industry, Description, ParentId, Parent.Name FROM Account];    }
+
+   // @AuraEnabled
+   // public static void deleteSelectedAccount(String recordIdToDelete) {
+       // try {            Account accToDelete = [SELECT Id FROM Account WHERE Id = :recordIdToDelete LIMIT 1];
+          //  delete accToDelete;        } catch (Exception e) {
+          //  throw new AuraHandledException('Error deleting account: ' + e.getMessage());
+       // }    } }
+public with sharing class AccountDataController {
+
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccountList() {
+        return [SELECT Id, Name, Industry, Description, ParentId, Parent.Name FROM Account];
+    }
+
+    @AuraEnabled
+    public static void updateAccount(Map<String, Object> updatedFields) {
+        try {
+            Account accToUpdate = new Account(
+                Id = (String) updatedFields.get('Id'),
+                Industry = (String) updatedFields.get('Industry'),
+                Description = (String) updatedFields.get('Description')
+            );
+            update accToUpdate;
+        } catch (Exception e) {
+            throw new AuraHandledException('Error updating account: ' + e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static void deleteSelectedAccount(String recordIdToDelete) {
+        try {
+            Account accToDelete = [SELECT Id FROM Account WHERE Id = :recordIdToDelete LIMIT 1];
+            delete accToDelete;
+        } catch (Exception e) {
+            throw new AuraHandledException('Error deleting account: ' + e.getMessage());
+        }
+    }
+}
