@@ -1,0 +1,116 @@
+ The <apex:commandButton> component is one of the most important components of Visualforce. It is a button rendered as an HTML input element with a type attribute set to submit, reset or image. The value of the HTML's type attribute depends on the <apex:commandButton> tag's specified values.
+
+<!-- create apex page with custom controller-->  
+
+<apex:page controller="ApexCommandButtonController">  
+
+    <!-- use apex form to show the accounts and contacts table-->  
+
+    <apex:form >  
+
+        <apex:pageBlock title="Account/Contact Information">  
+
+            <!-- command button that is responsible for showing accounts in the table-->  
+
+            <apex:commandButton action="{!getAccounts}" value="Show Accounts"/>  
+
+              
+
+            <!-- command button that is responsible for showing contacts in the table-->  
+
+            <apex:commandButton action="{!getContacts}" value="Show Contacts"/>  
+
+              
+
+            <apex:pageBlockSection  rendered="{!IF(accounts.size>0, true, false)}">  
+
+                <!-- create a table for showing accounts information -->     
+
+                <apex:pageBlockTable value="{!accounts}" var="acc">  
+
+                    <apex:column value="{!acc.Name}"/>  
+
+                    <apex:column value="{!acc.AccountNumber}"/>  
+
+                    <apex:column value="{!acc.Phone}"/>  
+
+                    <apex:column value="{!acc.Rating}"/>  
+
+                    <apex:column value="{!acc.Website}"/>  
+
+                </apex:pageBlockTable>  
+
+            </apex:pageBlockSection>  
+
+              
+
+            <apex:pageBlockSection  rendered="{!IF(contacts.size>0, true, false)}">  
+
+                <!-- create a table for showing contacts information -->     
+
+                <apex:pageBlockTable value="{!contacts}" var="con">  
+
+                    <apex:column value="{!con.FirstName}" />  
+
+                    <apex:column value="{!con.LastName}"/>  
+
+                    <apex:column value="{!con.AccountId}"/>  
+
+                    <apex:column value="{!con.Email}"/>  
+
+                    <apex:column value="{!con.Phone}"/>  
+
+                </apex:pageBlockTable>  
+
+            </apex:pageBlockSection>  
+
+        </apex:pageBlock>  
+
+    </apex:form>  
+
+</apex:page>  
+
+
+
+ApexCommandButtonController.apxc
+
+// create ApexCommandButtonController class to get the list of Accounts and Contacts  
+
+public class ApexCommandButtonController {  
+
+    public List<account> accounts{get;set;}  
+
+    public List<contact> contacts{get;set;}  
+
+      
+
+    // default constructor  
+
+    public ApexCommandButtonController (){  
+
+        accounts = new List<account>();  
+
+        contacts = new List<contact>();  
+
+    }  
+
+      
+
+    // create getAccounts() method to get account records   
+
+    public void getAccounts() {  
+
+        accounts = [select Id, Name, Rating, Phone, AccountNumber, Website From Account];  
+
+    }  
+
+    // create getContacts() method to get contact records  
+
+    public void getContacts() {  
+
+        contacts = [select Id, FirstName, LastName, AccountId, Email, Phone From Contact];  
+
+    }  
+
+}  
+
